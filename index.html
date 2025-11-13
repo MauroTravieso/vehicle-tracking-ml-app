@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Tracking ML - Production System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+    
+    <!-- Custom Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    
+    <!-- Custom Scripts -->
+    <script src="js/utils.js" defer></script>
+    <script src="js/models.js" defer></script>
+    <script src="js/charts.js" defer></script>
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚤 🚁 🚢 Vehicle Tracking ML System 🚗 🚚 🏍️</h1>
+            <p>Real-time Predictions for Transportation Systems</p>
+            <p>Mauro Travieso - Big Data Engineer</p>
+        </div>
+
+        <div class="model-selector">
+            <div class="model-tabs">
+                <div class="model-tab active" data-model="status">Status Classification</div>
+                <div class="model-tab" data-model="speed">Speed Prediction</div>
+                <div class="model-tab" data-model="emergency">Emergency Detection</div>
+                <div class="model-tab" data-model="weather">Weather Impact</div>
+                <div class="model-tab" data-model="clustering">Clustering</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Status Classification -->
+            <div class="model-section active" id="status-section">
+                <div class="info-box">
+                    <h4>📊 Status Classification Model</h4>
+                    <p>Predicts vehicle operational status based on real-time data. Trained on 21 status categories with 86.86% accuracy.</p>
+                </div>
+
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>🌍 Latitude</label>
+                        <input type="number" id="status-lat" step="0.0001" value="37.7749">
+                    </div>
+                    <div class="input-group">
+                        <label>🌍 Longitude</label>
+                        <input type="number" id="status-lon" step="0.0001" value="-122.4194">
+                    </div>
+                    <div class="input-group">
+                        <label>⚡ Speed (km/h)</label>
+                        <input type="number" id="status-speed" value="35">
+                    </div>
+                    <div class="input-group">
+                        <label>🧭 Heading (degrees)</label>
+                        <input type="number" id="status-heading" value="90">
+                    </div>
+                    <div class="input-group">
+                        <label>🚙 Vehicle Type</label>
+                        <select id="status-vehicle">
+                            <option value="land_vehicle">Land Vehicle</option>
+                            <option value="boat">Boat</option>
+                            <option value="airplane">Airplane</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>⛅ Weather Type</label>
+                        <select id="status-weather">
+                            <option value="heavy_clouds">Heavy Clouds</option>
+                            <option value="fog">Fog</option>
+                            <option value="light_rain">Light Rain</option>
+                            <option value="clear">Clear</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn btn-predict" onclick="predictStatus()">🎯 Predict Status</button>
+                <button class="btn btn-clear" onclick="clearResults('status')">🗑️ Clear</button>
+
+                <div class="loading" id="status-loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing vehicle status...</p>
+                </div>
+
+                <div class="results" id="status-results" style="display:none;">
+                    <h3>📋 Status Prediction Results</h3>
+                    <div class="result-item">
+                        <div class="result-label">Predicted Status</div>
+                        <div class="result-value" id="status-prediction"></div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Confidence</div>
+                        <div class="result-value" id="status-confidence"></div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" id="status-confidence-bar"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h4>Confidence Breakdown</h4>
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <h5>Model Accuracy</h5>
+                            <div class="value">86.86%</div>
+                        </div>
+                        <div class="metric-card">
+                            <h5>F1 Score</h5>
+                            <div class="value">0.8591</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Speed Prediction -->
+            <div class="model-section" id="speed-section">
+                <div class="info-box">
+                    <h4>🏎️ Speed Prediction Model</h4>
+                    <p>Predicts expected vehicle speed based on environmental conditions. R² score: 82.21%</p>
+                </div>
+
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>🌍 Latitude</label>
+                        <input type="number" id="speed-lat" step="0.0001" value="37.7749">
+                    </div>
+                    <div class="input-group">
+                        <label>🌍 Longitude</label>
+                        <input type="number" id="speed-lon" step="0.0001" value="-122.4194">
+                    </div>
+                    <div class="input-group">
+                        <label>🧭 Heading</label>
+                        <input type="number" id="speed-heading" value="90">
+                    </div>
+                    <div class="input-group">
+                        <label>🌧️ Weather Intensity</label>
+                        <input type="number" id="speed-weather-int" step="0.01" value="0.15" min="0" max="1">
+                    </div>
+                    <div class="input-group">
+                        <label>💨 Wind Speed (km/h)</label>
+                        <input type="number" id="speed-wind" value="15">
+                    </div>
+                    <div class="input-group">
+                        <label>🕐 Hour of Day</label>
+                        <input type="number" id="speed-hour" value="14" min="0" max="23">
+                    </div>
+                </div>
+
+                <button class="btn btn-predict" onclick="predictSpeed()">🎯 Predict Speed</button>
+                <button class="btn btn-clear" onclick="clearResults('speed')">🗑️ Clear</button>
+
+                <div class="results" id="speed-results" style="display:none;">
+                    <h3>🏁 Speed Prediction Results</h3>
+                    <div class="result-item">
+                        <div class="result-label">Predicted Speed</div>
+                        <div class="result-value" id="speed-prediction"></div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h4>Speed Calculation Breakdown</h4>
+                        <canvas id="speedChart"></canvas>
+                    </div>
+                    
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <h5>RMSE</h5>
+                            <div class="value">25.49</div>
+                        </div>
+                        <div class="metric-card">
+                            <h5>R² Score</h5>
+                            <div class="value">82.21%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency Detection -->
+            <div class="model-section" id="emergency-section">
+                <div class="info-box">
+                    <h4>🚨 Emergency Detection Model</h4>
+                    <p>Real-time emergency vehicle detection. Critical for safety operations with 100% training accuracy.</p>
+                </div>
+
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>⚡ Speed (km/h)</label>
+                        <input type="number" id="emerg-speed" value="75">
+                    </div>
+                    <div class="input-group">
+                        <label>🌍 Latitude</label>
+                        <input type="number" id="emerg-lat" step="0.0001" value="37.7376">
+                    </div>
+                    <div class="input-group">
+                        <label>🌍 Longitude</label>
+                        <input type="number" id="emerg-lon" step="0.0001" value="-122.4341">
+                    </div>
+                    <div class="input-group">
+                        <label>🧭 Heading</label>
+                        <input type="number" id="emerg-heading" value="180">
+                    </div>
+                </div>
+
+                <button class="btn btn-predict" onclick="predictEmergency()">🎯 Detect Emergency</button>
+                <button class="btn btn-clear" onclick="clearResults('emergency')">🗑️ Clear</button>
+
+                <div class="results" id="emergency-results" style="display:none;">
+                    <h3>🚨 Emergency Detection Results</h3>
+                    <div class="result-item">
+                        <div class="result-label">Status</div>
+                        <div class="result-value" id="emergency-status"></div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Confidence</div>
+                        <div class="result-value" id="emergency-confidence"></div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" id="emergency-confidence-bar"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h4>Risk Assessment Radar</h4>
+                        <canvas id="emergencyChart"></canvas>
+                    </div>
+                    
+                    <div id="emergency-warning" class="warning-box" style="display:none;">
+                        <strong>⚠️ EMERGENCY VEHICLE DETECTED</strong><br>
+                        Alert relevant authorities and clear traffic routes immediately.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Impact -->
+            <div class="model-section" id="weather-section">
+                <div class="info-box">
+                    <h4>🌦️ Weather Impact Model</h4>
+                    <p>Quantifies weather effects on vehicle speed. R² score: 86.23% with cross-validation.</p>
+                </div>
+
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>🌧️ Weather Intensity</label>
+                        <input type="number" id="weather-intensity" step="0.01" value="0.25" min="0" max="1">
+                    </div>
+                    <div class="input-group">
+                        <label>🌫️ Weather Opacity</label>
+                        <input type="number" id="weather-opacity" step="0.01" value="0.30" min="0" max="1">
+                    </div>
+                    <div class="input-group">
+                        <label>💨 Wind Speed (km/h)</label>
+                        <input type="number" id="weather-wind" value="18">
+                    </div>
+                    <div class="input-group">
+                        <label>⚡ Current Speed (km/h)</label>
+                        <input type="number" id="weather-speed" value="45">
+                    </div>
+                </div>
+
+                <button class="btn btn-predict" onclick="predictWeatherImpact()">🎯 Analyze Impact</button>
+                <button class="btn btn-clear" onclick="clearResults('weather')">🗑️ Clear</button>
+
+                <div class="results" id="weather-results" style="display:none;">
+                    <h3>⛈️ Weather Impact Analysis</h3>
+                    <div class="result-item">
+                        <div class="result-label">Weather-Adjusted Speed</div>
+                        <div class="result-value" id="weather-adjusted-speed"></div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Speed Reduction</div>
+                        <div class="result-value" id="weather-reduction"></div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Weather Hazard Score</div>
+                        <div class="result-value" id="weather-hazard"></div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h4>Weather Impact Progression</h4>
+                        <canvas id="weatherChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clustering -->
+            <div class="model-section" id="clustering-section">
+                <div class="info-box">
+                    <h4>📍 Geospatial Clustering</h4>
+                    <p>Identifies traffic patterns and vehicle behavior clusters. Silhouette score: 0.4767</p>
+                </div>
+
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>🌍 Latitude</label>
+                        <input type="number" id="cluster-lat" step="0.0001" value="37.7360">
+                    </div>
+                    <div class="input-group">
+                        <label>🌍 Longitude</label>
+                        <input type="number" id="cluster-lon" step="0.0001" value="-122.4460">
+                    </div>
+                    <div class="input-group">
+                        <label>⚡ Speed (km/h)</label>
+                        <input type="number" id="cluster-speed" value="25">
+                    </div>
+                    <div class="input-group">
+                        <label>🧭 Heading</label>
+                        <input type="number" id="cluster-heading" value="180">
+                    </div>
+                </div>
+
+                <button class="btn btn-predict" onclick="predictCluster()">🎯 Identify Cluster</button>
+                <button class="btn btn-clear" onclick="clearResults('clustering')">🗑️ Clear</button>
+
+                <div class="results" id="clustering-results" style="display:none;">
+                    <h3>🗺️ Cluster Assignment</h3>
+                    <div class="result-item">
+                        <div class="result-label">Cluster ID</div>
+                        <div class="result-value" id="cluster-id"></div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Cluster Type</div>
+                        <div class="result-value" id="cluster-type"></div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Behavior Pattern</div>
+                        <div class="result-value" id="cluster-pattern"></div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h4>Cluster Distribution</h4>
+                        <canvas id="clusterChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 Mauro Travieso - Vehicle Tracking ML System | Production Deployment v2.0</p>
+            <p>Models trained with PySpark on 3,588 vehicle records</p>
+        </div>
+    </div>
+</body>
+</html>
