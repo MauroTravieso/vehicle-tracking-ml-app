@@ -1,0 +1,55 @@
+{
+  "model_name": "Emergency Detection Model",
+  "model_type": "RandomForestClassificationModel",
+  "created_date": "2025-02-01",
+  "framework": "PySpark MLlib",
+  "deployment_type": "GitHub Pages (Client-Side)",
+  "input_features": [
+    "latitude",
+    "longitude",
+    "speed",
+    "heading",
+    "altitude_feet",
+    "weather_intensity",
+    "wind_speed",
+    "hour_of_day",
+    "is_high_speed",
+    "weather_impact_score",
+    "vehicle_type_idx"
+  ],
+  "num_features": 11,
+  "num_trees": 150,
+  "max_depth": 12,
+  "feature_importances": {
+    "latitude": 0.1762070784763128,
+    "longitude": 0.1429405175634993,
+    "hour_of_day": 0.13768563231453737,
+    "speed": 0.10297011209622142,
+    "weather_intensity": 0.09495659788130187,
+    "heading": 0.07432793354069685,
+    "vehicle_type_idx": 0.06633255596525957,
+    "weather_impact_score": 0.06231308162577837,
+    "wind_speed": 0.06067367799833669,
+    "altitude_feet": 0.05392524805841673,
+    "is_high_speed": 0.02766756447963903
+  },
+  "top_features": [
+    "latitude",
+    "longitude",
+    "hour_of_day",
+    "speed",
+    "weather_intensity",
+    "heading",
+    "vehicle_type_idx",
+    "weather_impact_score",
+    "wind_speed",
+    "altitude_feet"
+  ],
+  "performance": {
+    "accuracy": 1.0,
+    "f1_score": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "note": "Perfect training performance, monitor in production"
+  }
+}

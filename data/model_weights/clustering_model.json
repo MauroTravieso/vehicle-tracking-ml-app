@@ -1,0 +1,79 @@
+{
+  "model_name": "K-Means Clustering Model",
+  "model_type": "KMeans",
+  "created_date": "2025-02-01",
+  "k": 3,
+  "silhouette_score": 0.4767,
+  "cluster_centers": [
+    {
+      "cluster_id": 0,
+      "center": [
+        0.43831994803620933,
+        0.4682517891091602,
+        0.06145403593834846,
+        0.6163526509599213,
+        0.3004523984626373,
+        0.7610682492581491
+      ],
+      "features": [
+        "latitude",
+        "longitude",
+        "speed",
+        "heading",
+        "weather_intensity",
+        "hour_of_day"
+      ]
+    },
+    {
+      "cluster_id": 1,
+      "center": [
+        0.440770007685051,
+        0.4865306814075097,
+        0.06272717922128541,
+        0.614040561412813,
+        0.2429168001754925,
+        0.24152290303390334
+      ],
+      "features": [
+        "latitude",
+        "longitude",
+        "speed",
+        "heading",
+        "weather_intensity",
+        "hour_of_day"
+      ]
+    },
+    {
+      "cluster_id": 2,
+      "center": [
+        0.4104226224304545,
+        0.5440180397857949,
+        0.7723300904544582,
+        0.6513901891349179,
+        0.26822144194101694,
+        0.5027027027027022
+      ],
+      "features": [
+        "latitude",
+        "longitude",
+        "speed",
+        "heading",
+        "weather_intensity",
+        "hour_of_day"
+      ]
+    }
+  ],
+  "cluster_interpretations": {
+    "0": "West SF Ground Vehicles - Low speed urban traffic (Cluster 0: avg speed ~24 km/h)",
+    "1": "Central SF Ground Vehicles - Mixed transit (Cluster 1: avg speed ~25 km/h)",
+    "2": "High-Speed Aircraft - Aerial vehicles (Cluster 2: avg speed ~306 km/h)"
+  },
+  "performance": {
+    "silhouette_score": 0.4767,
+    "cluster_purity": {
+      "0": 0.905,
+      "1": 0.5,
+      "2": 1.0
+    }
+  }
+}
