@@ -92,7 +92,7 @@ Real-time Predictions (<100ms)
 ### Live Demo
 Visit the deployed application:
 ```
-https://MauroTravieso.github.io/vehicle-tracking-ml/
+https://MauroTravieso.github.io/vehicle-tracking-ml-app/
 ```
 
 ---
